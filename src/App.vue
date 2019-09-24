@@ -1,29 +1,33 @@
 <template>
   <v-app>
-    <Checkout/>
-    <!-- <Navigation/>
+    <!-- <Checkout/>
+    <Navigation/> -->
     
 
-    <v-content>
-      <HelloWorld/>
-    </v-content>
-     
-    <router-view></router-view> -->
+    <!-- <v-content> -->
+      <Navigation/>
+    <!-- </v-content> -->
+    <!-- <router-link to='/'>HelloWorld</router-link>
+    <router-link to='/login'>Login</router-link>
+    <router-link to='/checkout'>Checkout</router-link>
+      -->
+    <router-view></router-view>
   </v-app>
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld';
-// import Navigation from './components/Navigation';
-// import Login from './components/Login'
-import Checkout from './components/Checkout'
+//import HelloWorld from './components/HelloWorld';
+ import Navigation from './components/Navigation';
+ //import Login from './components/Login'
+//import Checkout from './components/Checkout'
+
 export default {
   name: 'App',
   components: {
-    Checkout
+    //Checkout
     // Login,
     // HelloWorld,
-    // Navigation
+     Navigation
   },
   data: () => ({
    drawer: false,

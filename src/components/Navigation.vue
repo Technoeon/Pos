@@ -26,17 +26,17 @@
     </v-navigation-drawer>
     <v-app-bar dark>
      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-     <v-toolbar-title>Cafe Gloria</v-toolbar-title>
+     <v-toolbar-title to="/">Cafe Gloria</v-toolbar-title>
      <v-spacer></v-spacer>
      <v-toolbar-item>
-       <v-btn flat>
+       <v-btn flat to="/checkout">
        <v-badge left color="green">
          <span slot="badge">5</span>
        <v-icon>mdi-cart</v-icon>Basket
        </v-badge>
        </v-btn>
        <!-- <v-btn flat>Basket</v-btn> -->
-       <v-btn flat>logout</v-btn> 
+       <v-btn flat to="/login"  @click="logout" data-cy="logout">logout</v-btn> 
      </v-toolbar-item>
      </v-app-bar>
     </div>
@@ -44,6 +44,7 @@
 
 <script>
 // import Login from './Login'
+import router from '../routes'
 export default {
   name: 'Navigation',
   // components: {
@@ -62,5 +63,10 @@ export default {
      title: 'Account'
    }]
   }),
+  methods: {
+    logout(){
+      router.push('/login')
+    }
+  }
 };
 </script>

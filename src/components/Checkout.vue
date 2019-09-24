@@ -3,7 +3,7 @@
     <Navigation />
     <div class="pa-6">
       <v-row>
-        <v-btn>
+        <v-btn to="/">
           <v-icon>mdi-arrow-left</v-icon>Back
         </v-btn>
         <h2 class="mx-auto">Payment</h2>

@@ -1,14 +1,26 @@
 <template>
+<div>
+<Navigation/>
+ <v-content>
   <v-container>
     <v-layout text-center wrap>
       <v-flex xs4>
-        <v-card height="300">
+        <v-card height="360">
           <p><b>Orders</b></p>
-          <v-text-field
-            single-line
+          <v-card
             outlined
-            height="250"
-          ></v-text-field>
+            height="280"
+            value="1150"
+            class="tvalue"
+          >
+          <v-row  class="flexy">
+            <h6>(Chicken pasta)- </h6>
+            <h5 class="divid">1150 BDT</h5>
+          </v-row>
+          <v-divider></v-divider>
+          </v-card>
+          <div><h4 class="flexy">= 1180 BDT</h4>
+          <p class="flexy">1150 BDT + (15% tax)</p></div>
         </v-card>
         <v-card class="pt-20" dark>
           <v-container>
@@ -34,7 +46,7 @@
               <v-btn outlined color="white" large>+/-</v-btn>
               <v-btn outlined color="white" large>0</v-btn>
               <v-btn outlined color="white" large>.</v-btn>
-              <v-btn outlined color="white" large><v-icon>mdi-arrow-right</v-icon></v-btn>
+              <v-btn outlined color="white" large to="/checkout"><v-icon>mdi-arrow-right</v-icon></v-btn>
             </div>
           </v-container>
         </v-card>
@@ -88,10 +100,16 @@
       </v-flex>
     </v-layout>
   </v-container>
+ </v-content>
+</div>
 </template>
 
 <script>
+import Navigation from './Navigation'
 export default {
+   components: {
+     Navigation
+  },
   // methods: {
   //   counter : function(){
   //     var count = 0
@@ -212,5 +230,16 @@ export default {
  }
  .v-card h3.display-1 {
    font-size: 24px !important
+ }
+ .tvalue {
+   font-size: 22px;
+   size: 30px;
+ }
+ .flexy {
+   float: right;
+   margin-right: 20px;
+ }
+ .divid {
+   margin-right: 20px;
  }
 </style>
