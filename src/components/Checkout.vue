@@ -7,7 +7,7 @@
           <v-icon>mdi-arrow-left</v-icon>Back
         </v-btn>
         <h2 class="mx-auto">Payment</h2>
-        <v-btn>
+        <v-btn to="/invoice">
           Validate
           <v-icon>mdi-arrow-right</v-icon>
         </v-btn>

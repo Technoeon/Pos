@@ -20,6 +20,7 @@
  import Navigation from './components/Navigation';
  //import Login from './components/Login'
 //import Checkout from './components/Checkout'
+//import Invoice from './components/Invoice'
 
 export default {
   name: 'App',
@@ -28,6 +29,7 @@ export default {
     // Login,
     // HelloWorld,
      Navigation
+    // Invoice
   },
   data: () => ({
    drawer: false,
