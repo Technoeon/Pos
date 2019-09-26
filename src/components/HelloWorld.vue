@@ -14,13 +14,22 @@
             class="tvalue"
           >
           <v-row  class="flexy">
-            <h6>(Chicken pasta)- </h6>
-            <h5 class="divid">1150 BDT</h5>
           </v-row>
           <v-divider></v-divider>
+          <table>
+            <tr>
+              <th>Name</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+            <tr v-for="cartItem in shoppingCart" :key="cartItem.id">
+              <td>{{cartItem.name}}</td>
+              <td>{{cartItem.qty}}</td>
+              <td>{{cartItem.price}}</td>
+            </tr>
+          </table>
+          {{subTotal}}--{{vat}} -- {{total}}
           </v-card>
-          <div><h4 class="flexy">= 1180 BDT</h4>
-          <p class="flexy">1150 BDT + (15% tax)</p></div>
         </v-card>
         <v-card class="pt-20" dark>
           <v-container>
@@ -56,47 +65,48 @@
         <!-- <div>
           <v-breadcrumbs :items="items" divider=">"></v-breadcrumbs>
         </div> -->
-         <v-tabs dark>
-            <v-tab>Snacks</v-tab>
-            <v-tab>Juice</v-tab>
-            <v-tab>Tea</v-tab>
-            <v-tab>Coffee</v-tab>
-            <v-tab>Set Menu</v-tab>
-            <v-tab>Soft drinks</v-tab>
-          </v-tabs>
-        <v-row>
-        <template v-for="(product,index) in products">
-        <v-flex pa-2  class="mx-4" :key="index">
-        
-        <v-hover>
-          <v-card slot-scope="{hover}" class="mx-auto" color="gray lighten-4" max-width="400" height="250" @click="counter">
-        <v-img :src="product.src" :aspect-ratio="16/9">
-        <v-expand-transition>
-          <div v-if="hover" class="d-flex transition-fast-in-fast-out orange draken-2 display-1 v-card--reveal display3 black--text" style="height:100%">
-          ${{product.price}}
-          </div>
-        </v-expand-transition>
-        </v-img>
-        <v-card-text class="pt-4" style="position:relative">
-          <v-btn absolute color="orange" class="shite--text" fab medium right top>
-            <v-icon>mdi-cart</v-icon>
-          </v-btn>
-        <div class="font-weight-light grey--text title mb-2" style="font-size:18px">
-          {{product.title}}
-        </div>
-        <h3 class="font-weight-light orange--text mb-2" style="font-size:16px">
-          {{product.category}}
-        </h3>
-        <!-- <div class="font-weight-light mb-2">
-          Our vintage kichen food made by chef and tasted by people
-        </div> -->
-        </v-card-text>
+        <v-tabs dark>
+            <v-tab v-for="pro in products" :key="pro.id">{{pro.title}}</v-tab>
+          <v-tab-item v-for="pro in products" :key="pro.id">
+            <v-row>
+              <template v-for="(product, index) in pro.product" >
+                <v-flex pa-2  class="mx-4" :key="index">
+                
+                  <v-hover>
+                    <v-card slot-scope="{hover}" class="mx-auto" color="gray lighten-4" max-width="400" height="250" @click="counter">
+                    <v-img src="https://picsum.photos/id/11/500/300" :aspect-ratio="16/9">
+                    <v-expand-transition>
+                      <div v-if="hover" class="d-flex transition-fast-in-fast-out orange draken-2 display-1 v-card--reveal display3 black--text" style="height:100%">
+                      $40
+                      </div>
+                    </v-expand-transition>
+                    </v-img>
+                    <v-card-text class="pt-4" style="position:relative">
+                      <v-btn
+                        @click="addToCart(product)" 
+                        absolute 
+                        color="orange"                  class="shite--text" 
+                        fab medium right top>
+                        <v-icon>mdi-cart</v-icon>
+                      </v-btn>
+                    <!-- <div class="font-weight-light grey--text title mb-2" style="font-size:18px">
+                      Product Title
+                    </div> -->
+                    <h2 class="font-weight-light orange--text mt-5" style="font-size:20px">
+                      Product Title
+                    </h2>
+                    <!-- <div class="font-weight-light mb-2">
+                      Our vintage kichen food made by chef and tasted by people
+                    </div> -->
+                    </v-card-text>
 
-          </v-card>
-        </v-hover>
-        </v-flex>
-        </template>
-        </v-row>
+                    </v-card>
+                  </v-hover>
+                </v-flex>
+              </template>
+            </v-row>
+          </v-tab-item>
+        </v-tabs> 
       </v-flex>
     </v-layout>
   </v-container>
@@ -105,116 +115,26 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Navigation from './Navigation'
 export default {
    components: {
      Navigation
   },
-  // methods: {
-  //   counter : function(){
-  //     var count = 0
-  //     return count = count + 1
-  //     console.log(count)
-  //   }
-  // },
-  data: () => ({
-    items: [
-      {
-        text: "Dashboard",
-        disabled: false,
-        href: "dashboard"
-      },
-      {
-        text: "Link 1",
-        disabled: false,
-        href: "link_1"
-      },
-      {
-        text: "Link 2",
-        disabled: true,
-        href: "link_2"
-      }
-    ],
-
-    products: [{
-      price:14.99,
-      src:'https://picsum.photos/id/11/500/300',
-      category:'For the perfect',
-      title:'Fried Chicken pasta',
-      description:'Our vintage kichen food made by chef and tasted by people'
-
-    },
-    {
-      price:14.99,
-      src:'https://picsum.photos/id/11/500/300',
-      category:'For the perfect',
-      title:'Fried Chicken pasta',
-      description:'Our vintage kichen food made by chef and tasted by people'
-
-    },
-    {
-      price:14.99,
-      src:'https://picsum.photos/id/11/500/300',
-      category:'For the perfect',
-      title:'Fried Chicken pasta',
-      description:'Our vintage kichen food made by chef and tasted by people'
-
-    },
-    {
-      price:14.99,
-      src:'https://picsum.photos/id/11/500/300',
-      category:'For the perfect',
-      title:'Fried Chicken pasta',
-      description:'Our vintage kichen food made by chef and tasted by people'
-
-    },{
-      price:14.99,
-      src:'https://picsum.photos/id/11/500/300',
-      category:'For the perfect',
-      title:'Fried Chicken pasta',
-      description:'Our vintage kichen food made by chef and tasted by people'
-
-    },{
-      price:14.99,
-      src:'https://picsum.photos/id/11/500/300',
-      category:'For the perfect',
-      title:'Fried Chicken pasta',
-      description:'Our vintage kichen food made by chef and tasted by people'
-
-    },
-    {
-      price:14.99,
-      src:'https://picsum.photos/id/11/500/300',
-      category:'For the perfect',
-      title:'Fried Chicken pasta',
-      description:'Our vintage kichen food made by chef and tasted by people'
-
-    },
-    {
-      price:14.99,
-      src:'https://picsum.photos/id/11/500/300',
-      category:'For the perfect',
-      title:'Fried Chicken pasta',
-      description:'Our vintage kichen food made by chef and tasted by people'
-
-    },
-    // {
-    //   price:14.99,
-    //   src:'https://picsum.photos/id/11/500/300',
-    //   category:'For the perfect',
-    //   title:'Fried Chicken pasta',
-    //   description:'Our vintage kichen food made by chef and tasted by people'
-
-    // },
-    {
-      price:14.99,
-      src:'https://picsum.photos/id/11/500/300',
-      category:'For the perfect',
-      title:'Fried Chicken pasta',
-      description:'Our vintage kichen food made by chef and tasted by people'
-
-    }]
-  })
+  data() {
+    return {
+      
+    }
+  },
+  computed: {
+    ...mapGetters(['products','shoppingCart','userData','subTotal', 'vat', 'total'])
+  },
+  methods: {
+    addToCart (product) {
+        product.qty = 1,
+        this.$store.dispatch('addToCart', product)
+    }
+  }
 };
 </script>
 <style>
@@ -242,4 +162,20 @@ export default {
  .divid {
    margin-right: 20px;
  }
+ table {
+  font-size: 16px;
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
 </style>

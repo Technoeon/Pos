@@ -6,15 +6,15 @@
       <!-- <a href="#" id="signup-box-link">Sign Up</a> -->
     </div>
     
-    <form class="email-login">
+    <form class="email-login" @submit.prevent="login">
       <div class="u-form-group">
-        <input type="email" placeholder="Email"/>
+        <input type="email"  placeholder="Email" v-model="email"/>
       </div>
       <div class="u-form-group">
-        <input type="password" placeholder="Password"/>
+        <input type="password" placeholder="Password" v-model="password" />
       </div>
       <div class="u-form-group">
-        <button to="/">Log in</button>
+        <button type="submit">Log in</button>
       </div>
       <div class="u-form-group">
         <a href="#" class="forgot-password">Forgot password?</a>
@@ -39,11 +39,59 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Login',
-//   data: {
-    
-//   },
+  data() {
+    return {
+      email: '',
+      password: '',
+
+    }
+  },
+  methods: {
+    async login () {
+      const rootURL = 'http://localhost/pos/api/'
+      let loginUrl = rootURL + 'user/login'
+      let headerConfig = {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': '123456'
+        }
+      }  
+      let user = {
+        user: this.email,
+        password: this.password
+      }
+      await axios.post(loginUrl, user, headerConfig)
+        .then((res) => {
+          console.log('user data', res.data.data)
+          let proUrl = 'http://localhost/pos/api/product'
+          let userData = res.data.data
+          console.log(userData.token)
+          this.$store.dispatch('loadUserData', userData)
+          let headerConfigProduct = {
+            headers: {
+              'x-api-key': '123456',
+              'Authorization': userData.token
+            }
+          }
+          axios.get(proUrl, headerConfigProduct)
+          .then((res) => {
+            console.log('product Data', res.data.data)
+            let productData = res.data.data
+            this.$store.dispatch('loadProduct', productData)
+            this.$router.push('/home')
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }
   
 }
 </script>

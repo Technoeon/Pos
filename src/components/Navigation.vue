@@ -36,25 +36,15 @@
        </v-badge>
        </v-btn>
        <!-- <v-btn flat>Basket</v-btn> -->
-       <v-btn flat to="/login"  @click="logout" data-cy="logout">logout</v-btn> 
+       <v-btn flat  @click="logout" data-cy="logout">logout</v-btn> 
      </v-toolbar-item>
      </v-app-bar>
     </div>
      </template>
 
 <script>
-// import Login from './Login'
-import router from '../routes'
 export default {
   name: 'Navigation',
-  // components: {
-  //   Login
-  // },
-  // methods: {
-  //   logout: function(){
-  //     console.log('works')
-  //   }
-  // },
   data: () => ({
    drawer: false,
    items: [{
@@ -64,8 +54,10 @@ export default {
    }]
   }),
   methods: {
-    logout(){
-      router.push('/login')
+    logout () {
+      console.log('logout')
+      this.$store.dispatch('logout')
+      this.$router.push('/')
     }
   }
 };

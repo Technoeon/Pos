@@ -44,7 +44,7 @@
           </v-row>
         
         <v-divider></v-divider>
-        <v-row class="pa-12">
+        <v-row class="pt-12">
           <v-card class="calc" dark>
             <v-container>
               <div>
@@ -75,11 +75,11 @@
               </div>
             </v-container>
           </v-card>
-          <!-- <div class="pl-4">
+          <div class="pl-4">
             <v-btn class="sz" color="grey">
               <v-icon>mdi-account</v-icon>Customer
             </v-btn>
-          </div> -->
+          </div>
         </v-row>
       </v-flex>
     </v-layout>
