@@ -3,7 +3,7 @@
     <div class="pa-12">
       <v-row>
         <div class="mx-auto">
-          <v-btn class="ml-12">
+          <v-btn class="ml-12" @click="printData">
             <v-icon>mdi-printer</v-icon>Print Receipt
           </v-btn>
         </div>
@@ -14,34 +14,56 @@
       </v-row>
     </div>
     <div align="center">
-      <v-card flat class="crd" color="#f0facd" align="center">
-        <v-card-text class="pl-5">
-          <p>09/25/2019 11:29:56 Order 00001-008-0008</p>
-          <p>Cafe Gloria</p>
-          <h6>Phone: +8801532599</h6>
-          <h6>User: Michel Admin</h6>
-          <v-row>
-            <p>(Chicken Masala Fry) -</p>
-            <p>1000.00 BDT</p>
-          </v-row>
-          <v-row>
-            <h6>Subtotal :</h6>
-            <h6 class="desgn">1000.00 BDT</h6>
-          </v-row>
-          <v-row>
-            <p>Total :</p>
-            <p>1000.00 BDT</p>
-          </v-row>
-          <v-row>
-            <h6>Cash(BDT) :</h6>
-            <h6>1000.00 BDT</h6>
-          </v-row>
-          <v-row>
-            <h6>Change :</h6>
-            <h6>10.00 BDT</h6>
-          </v-row>
-        </v-card-text>
-      </v-card>
+
+      <table class="crd" id="printTable">
+        <tr>
+          <th colspan="2">
+            <h5>09/25/2019 11:29:56 Order 00001-008-0008</h5>
+          </th>
+        </tr>
+        <tr>
+          <th colspan="2">Cafe Gloria</th>
+        </tr>
+        <tr>
+          <th colspan="2">
+            <h6>Phone: +8801532599</h6>
+          </th>
+        </tr>
+        <tr>
+          <th colspan="2">
+            <h6>User: Michel Admin</h6>
+          </th>
+        </tr>
+        <tr>
+          <td>(Chicken Masala Fry) - </td>
+          <td>1000.00</td>
+        </tr>
+        <tr>
+          <td><h6>Subtotal : </h6></td>
+          <td><h6>1000.00</h6> </td>
+        </tr>
+        <tr>
+          <td>Total : </td>
+          <td>1000.00</td>
+        </tr>
+        <tr>
+          <td>
+            <h6>Cash(BDT) : </h6>
+          </td>
+          <td>
+            <h6>1000.00</h6>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h6>Change : </h6>
+          </td>
+          <td>
+            <h6>10.00</h6>
+          </td>
+        </tr>
+      </table>
+      <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
     </div>
   </div>
 </template>
@@ -52,24 +74,51 @@ export default {
 
   data: () => ({
     //
-  })
+  }),
+  methods: {
+      // printData(){
+      //   var divToPrint= this.$refs.printTable
+      //   newWin= window.open("");
+      //   newWin.document.write(divToPrint.outerHTML);
+      //   newWin.print();
+      //   newWin.close();
+      // }
+     printData(){
+         window.frames["print_frame"].document.body.innerHTML = document.getElementById("printTable").innerHTML;
+         window.frames["print_frame"].window.focus();
+         window.frames["print_frame"].window.print();
+     }
+  }
 };
 </script>
 
  <style>
+ /* @media print{
+  #printTable { display: block; };
+  *{ display: none; };
+  
+} */
+@media print {
+  * {
+    display: none;
+  }
+  #printTable {
+    display: block;
+  }
+}
 .btnstl {
   float: left;
   margin-right: 20px;
 }
 .crd {
   width: 300px;
-  height: 310px;
-  align-self: "center";
+  height: 320px;
+  background-color: #f0facd;
 }
 .desgn {
   float: right;
 }
 .sz {
-  margin-left: 20px;
+  margin-left: 10px;
 }
 </style>
