@@ -29,9 +29,9 @@
      <v-toolbar-title to="/">Cafe Gloria</v-toolbar-title>
      <v-spacer></v-spacer>
      <v-toolbar-item>
-       <v-btn flat to="/checkout">
+       <v-btn text to="/checkout">
        <v-badge left color="green">
-         <span slot="badge">5</span>
+         <span slot="badge" v-if="shoppingCart.length > 0">{{shoppingCart.length}}</span>
        <v-icon>mdi-cart</v-icon>Basket
        </v-badge>
        </v-btn>
@@ -43,6 +43,7 @@
      </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Navigation',
   data: () => ({
@@ -53,11 +54,13 @@ export default {
      title: 'Account'
    }]
   }),
+    computed: {
+    ...mapGetters(['products','shoppingCart','userData','subTotal', 'vat', 'total'])
+  },
   methods: {
     logout () {
-      console.log('logout')
       this.$store.dispatch('logout')
-      this.$router.push('/')
+      this.$router.go({path: '/'})
     }
   }
 };

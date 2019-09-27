@@ -20,16 +20,25 @@ export default new Vuex.Store({
       state.products = payload
     },
     SET_TO_CART (state, payload) {
-      let prodExist = state.shoppingCart.find(prod => prod.id === payload.id)
+      const prodExist = state.shoppingCart.find(prod => prod.id === payload.id)
       if (!prodExist) {
-        payload.price = parseInt(payload.qty) * parseInt(payload.price)
-        payload.vat_amount = parseInt(payload.qty) * parseInt(payload.vat_amount)
+        payload.price = parseFloat(payload.qty) * parseFloat(payload.price)
+        payload.vat_amount = parseFloat(payload.qty) * parseFloat(payload.vat_amount)
         state.shoppingCart.push(payload)
       } else {
-        prodExist.qty++
-        prodExist.price = parseInt(prodExist.qty) * parseInt(prodExist.price)
-        payload.vat_amount = parseInt(payload.qty) * parseInt(payload.vat_amount)
+        prodExist.qty = prodExist.qty + 1
+        prodExist.price = parseFloat(prodExist.qty) * parseFloat(prodExist.price)
+        prodExist.vat_amount = parseFloat(prodExist.qty) * parseFloat(prodExist.vat_amount)
+        prodExist.selected = true
       }
+     // console.log('cart',state.shoppingCart)
+      // console.log('cart',prodExist)
+    },
+    SET_UNSELECT (state) {
+      state.shoppingCart.map(cart=> {
+        cart.selected = false
+        return cart
+      })
     }
   },
   actions: {
@@ -40,6 +49,7 @@ export default new Vuex.Store({
       commit('SET_PRODUCTS', payload)
     },
     async addToCart ({ commit }, payload) {
+      await commit('SET_UNSELECT')
       await commit('SET_TO_CART', payload)
     },
     logout (state) {

@@ -8,6 +8,7 @@ import Router from 'vue-router';
 
 Vue.use(Router)
 
+
 const router = new Router ({
     mode: 'history',
     base: process.env.BASE_URL,
@@ -42,7 +43,7 @@ const router = new Router ({
     }
 ]
 })
-console.log('check user', store.state.userData)
+// console.log('check user', store.state.userData)
 // Nav Guard
 router.beforeEach((to, from, next) => {
   // Check for requiresAuth guard

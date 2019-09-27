@@ -7,7 +7,7 @@
           <v-icon>mdi-arrow-left</v-icon>Back
         </v-btn>
         <h2 class="mx-auto">Payment</h2>
-        <v-btn to="/invoice">
+        <v-btn to="/invoice" v-if="total<=numb" @click="postData">
           Validate
           <v-icon>mdi-arrow-right</v-icon>
         </v-btn>
@@ -36,50 +36,46 @@
           </v-row>
           </v-sheet>
           <v-row class="pl-3">
-            <v-sheet color="green lighten-3" class="sz4"><h2>1100</h2></v-sheet>
-            <v-sheet color="yellow lighten-3" class="sz4"><h2>1200</h2></v-sheet>
-            <v-sheet color="teal lighten-3" class="sz4"><h2>100</h2></v-sheet>
+            <v-sheet color="green lighten-3" class="sz4"><h2>{{total}}</h2></v-sheet>
+            <v-sheet color="yellow lighten-3" class="sz4"><h2>{{numb}}</h2></v-sheet>
+            <v-sheet color="teal lighten-3" class="sz4" v-if="total<numb"><h2>{{parseInt(numb)-total}}</h2></v-sheet>
             <v-sheet color="grey lighten-1" class="sz4"><h2>(Cash)</h2></v-sheet>
-            <v-sheet color="grey lighten-1" class="sz5"><v-icon class="pt-1">mdi-close</v-icon></v-sheet>
+            <v-sheet color="grey lighten-1" class="sz5" v-if="total<numb" @click="numb = ''" ><v-icon class="pt-1">mdi-close</v-icon></v-sheet>
           </v-row>
+          <v-sheet color="green lighten-3" class="sz4" v-if="parseInt(numb) > 0"><h2>{{total-parseInt(numb)}}</h2></v-sheet>
         
         <v-divider></v-divider>
-        <v-row class="pt-12">
+        <v-row class="pa-12">
           <v-card class="calc" dark>
             <v-container>
               <div>
-                <v-btn outlined color="white" large>1</v-btn>
-                <v-btn outlined color="white" large>2</v-btn>
-                <v-btn outlined color="white" large>3</v-btn>
-                <v-btn outlined color="white" large>+10</v-btn>
+                <v-btn outlined color="white" large @click="numb = numb + '1'">1</v-btn>
+                <v-btn outlined color="white" large @click="numb = numb +'2'">2</v-btn>
+                <v-btn outlined color="white" large @click="numb = numb +'3'">3</v-btn>
+                <v-btn outlined color="white" large @click="numb = parseInt(numb) + 10">+10</v-btn>
               </div>
               <div :class="size">
-                <v-btn outlined color="white" large>4</v-btn>
-                <v-btn outlined color="white" large>5</v-btn>
-                <v-btn outlined color="white" large>6</v-btn>
-                <v-btn outlined color="white" large>+20</v-btn>
+                <v-btn outlined color="white" large @click="numb = numb +'4'">4</v-btn>
+                <v-btn outlined color="white" large @click="numb = numb +'5'">5</v-btn>
+                <v-btn outlined color="white" large @click="numb = numb +'6'">6</v-btn>
+                <v-btn outlined color="white" large @click="numb = parseInt(numb) + 20">+20</v-btn>
               </div>
               <div :class="size">
-                <v-btn outlined color="white" large>7</v-btn>
-                <v-btn outlined color="white" large>8</v-btn>
-                <v-btn outlined color="white" large>9</v-btn>
-                <v-btn outlined color="white" large>+50</v-btn>
+                <v-btn outlined color="white" large @click="numb = numb +'7'">7</v-btn>
+                <v-btn outlined color="white" large @click="numb = numb +'8'">8</v-btn>
+                <v-btn outlined color="white" large @click="numb = numb +'9'">9</v-btn>
+                <v-btn outlined color="white" large @click="numb = parseInt(numb) + 50">+50</v-btn>
               </div>
               <div :class="size">
-                <v-btn outlined color="white" large>C</v-btn>
-                <v-btn outlined color="white" large>0</v-btn>
-                <v-btn outlined color="white" large>.</v-btn>
-                <v-btn outlined color="white" large>
-                  <v-icon>mdi-arrow-right</v-icon>
+                <v-btn outlined color="white" large @click="numb = ''">C</v-btn>
+                <v-btn outlined color="white" large @click="numb = numb +'0'">0</v-btn>
+                <v-btn outlined color="white" large @click="numb = numb +'.'">.</v-btn>
+                <v-btn outlined color="white" large @click="numb = numb.slice(0, -1)">
+                  <v-icon>mdi-arrow-left</v-icon>
                 </v-btn>
               </div>
             </v-container>
           </v-card>
-          <div class="pl-4">
-            <v-btn class="sz" color="grey">
-              <v-icon>mdi-account</v-icon>Customer
-            </v-btn>
-          </div>
         </v-row>
       </v-flex>
     </v-layout>
@@ -88,14 +84,29 @@
 
 <script>
 import Navigation from "./Navigation";
+import { mapGetters } from 'vuex'
 export default {
   name: "Checkout",
   components: {
     Navigation
   },
   data: () => ({
-    //
-  })
+    numb: '',
+    closeState: false
+  }),
+   computed: {
+    ...mapGetters(['products','shoppingCart','userData','subTotal', 'vat', 'total'])
+  },
+  methods: {
+    clear(){
+     if(parseInt(numb)-total > 0){
+       return closeState = true;
+     } 
+    },
+    postData(){
+       
+     }
+  }
 };
 </script>
 <style>
