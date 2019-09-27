@@ -7,7 +7,7 @@
           <v-icon>mdi-arrow-left</v-icon>Back
         </v-btn>
         <h2 class="mx-auto">Payment</h2>
-        <v-btn to="/invoice" v-if="total<=numb" @click="postData">
+        <v-btn v-if="total<=numb" @click="postData">
           Validate
           <v-icon>mdi-arrow-right</v-icon>
         </v-btn>
@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import Navigation from "./Navigation";
 import { mapGetters } from 'vuex'
 export default {
@@ -103,9 +104,40 @@ export default {
        return closeState = true;
      } 
     },
-    postData(){
-       
-     }
+    async postData(){
+      let proUrl = "http://192.168.43.204/pos/api/order";
+      let userData = this.userData;
+      let headerConfig = {
+        headers: {
+          "x-api-key": "123456",
+          Authorization: userData.token
+        }
+      };
+      let cart = this.shoppingCart.map(sp => {
+        return {
+          id: sp.id,
+          name: sp.name,
+          qty: sp.qty
+        }
+      })
+      let orderDetails = {
+        total: this.total,
+        vat: this.vat,
+        cash: this.numb,
+        change: parseInt(this.numb) - this.total,
+        cart: cart
+      }
+      await axios.post(proUrl, orderDetails, headerConfig)
+        .then(res => {
+          // console.log("product Data", res.data.data);
+          let orderId = res.data.data;
+          this.$store.dispatch('clearCart')
+          this.$router.push('/invoice/'+orderId);
+        })
+        .catch(err => {
+          alert(err);
+        });
+    }
   }
 };
 </script>

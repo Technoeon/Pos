@@ -35,8 +35,9 @@ const router = new Router ({
       }
     },
     {
-        path:'/invoice', 
+        path:'/invoice/:id', 
         component: Invoice,
+        props: true,
         meta: {
         requiresAuth: true
       }

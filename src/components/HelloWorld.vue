@@ -22,7 +22,7 @@
               <th>Quantity</th>
               <th>Price</th>
             </tr>
-            <tr v-for="cartItem in shoppingCart" :key="cartItem.id" :class="{'trt': cartItem.selected}">
+            <tr v-for="cartItem in shoppingCart" :key="cartItem.id" :class="{'trt': cartItem.selected}" @click="cartSelect(cartItem.id)">
               <td>{{cartItem.name}}</td>
               <td>{{cartItem.qty}}</td>
               <td>{{cartItem.price}}</td>
@@ -132,8 +132,10 @@ export default {
     addToCart (product) {
         product.qty = 1
         product.selected = true
-        console.log('pro',product)
         this.$store.dispatch('addToCart', product)
+    },
+    cartSelect (id) {
+      this.$store.dispatch('selectCart', id)
     }
   }
 };

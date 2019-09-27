@@ -13,12 +13,13 @@
         </v-btn>
       </v-row>
     </div>
-    <div align="center">
+     <!-- {{detailOrder}} -->
 
+    <div align="center">
       <table class="crd" id="printTable">
         <tr>
           <th colspan="2">
-            <h5>{{new Date().toLocaleString()}} Order 00001-008-0008</h5>
+            <h5>{{new Date().toLocaleString()}} Order No:{{detailOrder.orderNumber}}</h5>
           </th>
         </tr>
         <tr>
@@ -35,21 +36,21 @@
           </th>
         </tr>
         <tr>
-          <td><h5>(Chicken Masala Fry) - 1000.00</h5></td>
+          <td v-for="order in detailOrder.orderItem" :key="order"><h5>({{order.product_name}}) - {{order.unit_price}} * {{order.qty}}</h5></td>
           <!-- <td>1000.00</td> -->
         </tr>
         
         <tr>
-          <td><h6>Subtotal : 1000.00</h6></td>
+          <td><h6>Subtotal : {{detailOrder.subtotal}} & Vat ({{detailOrder.vat}})</h6></td>
           <!-- <td><h6>1000.00</h6> </td> -->
         </tr>
         <tr>
-          <td><h5>Total : 1000.00</h5></td>
+          <td><h5>Total : {{detailOrder.total}}</h5></td>
           <!-- <td>1000.00</td> -->
         </tr>
         <tr>
           <td>
-            <h6>Cash(BDT) : 1000.00</h6>
+            <h6>Cash(BDT) : {{detailOrder.cash}}</h6>
           </td>
           <!-- <td>
             <h6>1000.00</h6>
@@ -57,37 +58,54 @@
         </tr>
         <tr>
           <td>
-            <h6>Change : 1000.00</h6>
+            <h6>Change : {{detailOrder.change}}</h6>
           </td>
           <!-- <td>
             <h6>10.00</h6>
           </td> -->
         </tr>
       </table>
-      <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+      <iframe name="print_frame" width="0" height="0" frameborder="1" src="about:blank"></iframe>
     </div>
   </div>
 </template>
 
  <script>
+import axios from 'axios'
+import { mapGetters } from 'vuex'
 export default {
   name: "Invoice",
-
+  created () {
+    this.fetchOrder(this.$route.params.id)
+  },
   data: () => ({
-    //
+    detailOrder: null
   }),
+  computed: {
+    ...mapGetters(['userData'])
+  },
   methods: {
-      // printData(){
-      //   var divToPrint= this.$refs.printTable
-      //   newWin= window.open("");
-      //   newWin.document.write(divToPrint.outerHTML);
-      //   newWin.print();
-      //   newWin.close();
-      // }
-     printData(){
-         window.frames["print_frame"].document.body.innerHTML = document.getElementById("printTable").innerHTML;
-         window.frames["print_frame"].window.focus();
-         window.frames["print_frame"].window.print();
+     printData () {
+      window.frames["print_frame"].document.body.innerHTML = document.getElementById("printTable").innerHTML;
+      window.frames["print_frame"].window.focus();
+      window.frames["print_frame"].window.print();
+     },
+     fetchOrder (id) {
+      let proUrl = 'http://192.168.43.204/pos/api/order/' + id
+      let userData = this.userData;
+      let headerConfigProduct = {
+        headers: {
+          "x-api-key": "123456",
+          Authorization: userData.token
+        }
+      };
+      axios.get(proUrl, headerConfigProduct)
+        .then(res => {
+          this.detailOrder = res.data.data
+        })
+        .catch(err => {
+          alert(err);
+        });
      }
   }
 };
@@ -105,8 +123,6 @@ export default {
   }
   #printTable {
     display: block;
-    page-break-inside: avoid;
-    page-break-after:always;
   }
 }
   /* table { page-break-after:auto }

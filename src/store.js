@@ -20,25 +20,26 @@ export default new Vuex.Store({
       state.products = payload
     },
     SET_TO_CART (state, payload) {
-      const prodExist = state.shoppingCart.find(prod => prod.id === payload.id)
-      if (!prodExist) {
-        payload.price = parseFloat(payload.qty) * parseFloat(payload.price)
-        payload.vat_amount = parseFloat(payload.qty) * parseFloat(payload.vat_amount)
-        state.shoppingCart.push(payload)
-      } else {
-        prodExist.qty = prodExist.qty + 1
-        prodExist.price = parseFloat(prodExist.qty) * parseFloat(prodExist.price)
-        prodExist.vat_amount = parseFloat(prodExist.qty) * parseFloat(prodExist.vat_amount)
-        prodExist.selected = true
-      }
+      state.shoppingCart.push(payload)
      // console.log('cart',state.shoppingCart)
       // console.log('cart',prodExist)
+    },
+    async SET_TO_EXIST_CART (state, payload) {
+      const prodExist = await state.shoppingCart.find(prod => prod.id === payload.id)
+      prodExist.qty++
+      prodExist.selected = true
     },
     SET_UNSELECT (state) {
       state.shoppingCart.map(cart=> {
         cart.selected = false
         return cart
       })
+    },
+    SET_SELECT (state, payload) {
+      state.shoppingCart.find(cart=> cart.id === payload).selected = true
+    },
+    UPDATE_CART ( state, payload) {
+      state.shoppingCart.find(cart=> cart.selected === true).qty = payload
     }
   },
   actions: {
@@ -48,16 +49,31 @@ export default new Vuex.Store({
     loadProduct ({ commit }, payload) {
       commit('SET_PRODUCTS', payload)
     },
-    async addToCart ({ commit }, payload) {
+    async addToCart ({ commit, state }, payload) {
       await commit('SET_UNSELECT')
-      await commit('SET_TO_CART', payload)
+      const isExist = state.shoppingCart.find(sp => sp.id === payload.id)
+      if (!isExist) {
+        await commit('SET_TO_CART', payload)
+      } else {
+        await commit('SET_TO_EXIST_CART', payload)
+      }
+      
     },
-    logout (state) {
+    logout ({state}) {
       state.userData = null
       state.shoppingCart = []
       window.localStorage.clear()
     },
-
+    clearCart ({state}) {
+      state.shoppingCart = []
+    },
+    async selectCart ({commit},payload) {
+      await commit('SET_UNSELECT')
+      await commit('SET_SELECT', payload)
+    },
+    updateCartQuantity ({commit}, payload ) {
+      commit('UPDATE_CART', payload)
+    }
   },
   getters: {
     test (state) {
