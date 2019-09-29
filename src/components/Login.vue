@@ -20,20 +20,6 @@
           <a href="#" class="forgot-password">Forgot password?</a>
         </div>
       </form>
-      <!-- <form class="email-signup">
-      <div class="u-form-group">
-        <input type="email" placeholder="Email"/>
-      </div>
-      <div class="u-form-group">
-        <input type="password" placeholder="Password"/>
-      </div>
-      <div class="u-form-group">
-        <input type="password" placeholder="Confirm Password"/>
-      </div>
-      <div class="u-form-group">
-        <button>Sign Up</button>
-      </div>
-      </form>-->
     </div>
   </div>
 </template>
@@ -50,7 +36,7 @@ export default {
   },
   methods: {
     async login() {
-      const rootURL = "http://192.168.43.204/pos/api/";
+      const rootURL = "http://localhost/pos/api/";
       let loginUrl = rootURL + "user/login";
       let headerConfig = {
         headers: {
@@ -66,7 +52,7 @@ export default {
         .post(loginUrl, user, headerConfig)
         .then(res => {
          // console.log("user data", res.data.data);
-          let proUrl = "http://192.168.43.204/pos/api/product";
+          let proUrl = "http://localhost/pos/api/product";
           let userData = res.data.data;
          // console.log(userData.token);
           this.$store.dispatch("loadUserData", userData);

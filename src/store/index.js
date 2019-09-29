@@ -4,8 +4,7 @@ import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  plugins: [createPersistedState()],
+export const store = new Vuex.Store({
   state: {
     test: 'data ffff',
     userData: null,
@@ -20,13 +19,16 @@ export default new Vuex.Store({
       state.products = payload
     },
     SET_TO_CART (state, payload) {
+      payload.qty = 1
+      payload.subprice = parseFloat(payload.price)
+      payload.subvat = parseFloat(payload.vat_amount)
       state.shoppingCart.push(payload)
-     // console.log('cart',state.shoppingCart)
-      // console.log('cart',prodExist)
     },
-    async SET_TO_EXIST_CART (state, payload) {
-      const prodExist = await state.shoppingCart.find(prod => prod.id === payload.id)
+    SET_TO_EXIST_CART (state, payload) {
+      const prodExist = state.shoppingCart.find(prod => parseInt(prod.id) === parseInt(payload.id))
       prodExist.qty++
+      prodExist.subprice = parseFloat(payload.price) * prodExist.qty
+      prodExist.subvat = parseFloat(payload.vat_amount) * prodExist.qty
       prodExist.selected = true
     },
     SET_UNSELECT (state) {
@@ -39,7 +41,10 @@ export default new Vuex.Store({
       state.shoppingCart.find(cart=> cart.id === payload).selected = true
     },
     UPDATE_CART ( state, payload) {
-      state.shoppingCart.find(cart=> cart.selected === true).qty = payload
+      const prodExist = state.shoppingCart.find(cart=> cart.selected === true)
+      prodExist.qty = payload
+      prodExist.subprice = parseFloat(prodExist.price) * prodExist.qty
+      prodExist.subvat = parseFloat(prodExist.vat_amount) * prodExist.qty
     }
   },
   actions: {
@@ -53,11 +58,10 @@ export default new Vuex.Store({
       await commit('SET_UNSELECT')
       const isExist = state.shoppingCart.find(sp => sp.id === payload.id)
       if (!isExist) {
-        await commit('SET_TO_CART', payload)
+        commit('SET_TO_CART', payload)
       } else {
-        await commit('SET_TO_EXIST_CART', payload)
+        commit('SET_TO_EXIST_CART', payload)
       }
-      
     },
     logout ({state}) {
       state.userData = null
@@ -69,16 +73,17 @@ export default new Vuex.Store({
     },
     async selectCart ({commit},payload) {
       await commit('SET_UNSELECT')
-      await commit('SET_SELECT', payload)
+      commit('SET_SELECT', payload)
     },
     updateCartQuantity ({commit}, payload ) {
       commit('UPDATE_CART', payload)
+    },
+    setItemZero ({ state }) {
+      const itemzero = state.shoppingCart.find(sp => sp.selected === true)
+      state.shoppingCart.splice(state.shoppingCart.indexOf(itemzero), 1)
     }
   },
   getters: {
-    test (state) {
-      return state.test
-    },
     userData (state) {
       return state.userData
     },
@@ -89,16 +94,17 @@ export default new Vuex.Store({
       return state.shoppingCart
     },
     subTotal (state) {
-      return state.shoppingCart.reduce((a, b) => a + (parseInt(b['price']) || 0), 0)
+      return state.shoppingCart.reduce((a, b) => a + (parseInt(b['subprice']) || 0), 0)
     },
     vat (state) {
-      return state.shoppingCart.reduce((a, b) => a + (parseInt(b['vat_amount']) || 0), 0)
+      return state.shoppingCart.reduce((a, b) => a + (parseInt(b['subvat']) || 0), 0)
     },
     total (state) {
-      let subtotal = state.shoppingCart.reduce((a, b) => a + (parseInt(b['price']) || 0), 0)
-      let vat = state.shoppingCart.reduce((a, b) => a + (parseInt(b['vat_amount']) || 0), 0)
+      let subtotal = state.shoppingCart.reduce((a, b) => a + (parseInt(b['subprice']) || 0), 0)
+      let vat = state.shoppingCart.reduce((a, b) => a + (parseInt(b['subvat']) || 0), 0)
       let total = subtotal + vat
       return total
     }
-  }
+  },
+  plugins: [createPersistedState({storage: window.localStorage})]
 })

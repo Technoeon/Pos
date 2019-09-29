@@ -3,6 +3,7 @@
     <div class="pa-12">
       <v-row>
         <div class="mx-auto">
+          {{detailOrder.orderItem}}
           <v-btn class="ml-12" @click="printData">
             <v-icon>mdi-printer</v-icon>Print Receipt
           </v-btn>
@@ -18,53 +19,58 @@
     <div align="center">
       <table class="crd" id="printTable">
         <tr>
-          <th colspan="2">
-            <h5>{{new Date().toLocaleString()}} Order No:{{detailOrder.orderNumber}}</h5>
+          <th colspan="3">
+            <h5 align="center">{{new Date().toLocaleString()}} Order No:{{detailOrder.orderNumber}}</h5>
           </th>
         </tr>
         <tr>
-          <th colspan="2">Cafe Gloria</th>
+          <th colspan="3"><h5 align="center">Cafe Gloria</h5></th>
         </tr>
         <tr>
-          <th colspan="2">
-            <h6>Phone: +8801532599</h6>
+          <th colspan="3">
+            <h6 align="center">13-14,Zoo Road,Mollik Tower,Mirpur-1,Dhaka-1216, Phone:9007719,9007742</h6>
           </th>
         </tr>
         <tr>
-          <th colspan="2">
-            <h6>User: Michel Admin</h6>
+          <th colspan="3">
+            <h6 align="center">Email: cafegloriabd@gmail.com</h6>
           </th>
         </tr>
         <tr>
-          <td v-for="order in detailOrder.orderItem" :key="order"><h5>({{order.product_name}}) - {{order.unit_price}} * {{order.qty}}</h5></td>
-          <!-- <td>1000.00</td> -->
+          <td colspan="3"></td>
+        </tr>
+        <tr align="center" v-for="(order, index) in detailOrder.orderItem" :key="order.id">
+          <td >{{index + 1}}<h5>({{order.product_name}}) </h5></td>
+          <td>{{order.unit_price}} * {{order.qty}}</td>
+          <td>{{order.sub_price}}</td>
         </tr>
         
         <tr>
-          <td><h6>Subtotal : {{detailOrder.subtotal}} & Vat ({{detailOrder.vat}})</h6></td>
-          <!-- <td><h6>1000.00</h6> </td> -->
+          <td colspan="2"><h6>Subtotal : </h6></td>
+          <td><h6>{{detailOrder.subtotal}} & Vat ({{detailOrder.vat}})</h6> </td>
         </tr>
         <tr>
-          <td><h5>Total : {{detailOrder.total}}</h5></td>
-          <!-- <td>1000.00</td> -->
+          <td colspan="2"><h5>Total : </h5></td>
+          <td><h5>{{detailOrder.total}}</h5></td>
         </tr>
         <tr>
-          <td>
-            <h6>Cash(BDT) : {{detailOrder.cash}}</h6>
+          <td colspan="2">
+            <h6>Cash(BDT) : </h6>
           </td>
-          <!-- <td>
-            <h6>1000.00</h6>
-          </td> -->
+          <td>
+            <h6>{{detailOrder.cash}}</h6>
+          </td>
         </tr>
         <tr>
-          <td>
-            <h6>Change : {{detailOrder.change}}</h6>
+          <td colspan="2">
+            <h6>Change : </h6>
           </td>
-          <!-- <td>
-            <h6>10.00</h6>
-          </td> -->
+          <td>
+            <h6>{{detailOrder.change}}</h6>
+          </td>
         </tr>
       </table>
+      <div class="table-brak"></div>
       <iframe name="print_frame" width="0" height="0" frameborder="1" src="about:blank"></iframe>
     </div>
   </div>
@@ -91,7 +97,7 @@ export default {
       window.frames["print_frame"].window.print();
      },
      fetchOrder (id) {
-      let proUrl = 'http://192.168.43.204/pos/api/order/' + id
+      let proUrl = 'http://localhost/pos/api/order/' + id
       let userData = this.userData;
       let headerConfigProduct = {
         headers: {
@@ -112,11 +118,6 @@ export default {
 </script>
 
  <style>
- /* @media print{
-  #printTable { display: block; };
-  *{ display: none; };
-  
-} */
 @media print {
   * {
     display: none;
@@ -125,7 +126,7 @@ export default {
     display: block;
   }
 }
-  /* table { page-break-after:auto }
+  .table-brak { page-break-after:auto }
   tr    { page-break-inside:avoid; page-break-after:auto }
   td    { page-break-inside:avoid; page-break-after:auto } */
 
@@ -144,5 +145,8 @@ export default {
 }
 .sz {
   margin-left: 10px;
+}
+.cen {
+  align-self: center;
 }
 </style>

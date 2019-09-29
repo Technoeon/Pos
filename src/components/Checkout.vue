@@ -99,13 +99,13 @@ export default {
     ...mapGetters(['products','shoppingCart','userData','subTotal', 'vat', 'total'])
   },
   methods: {
-    clear(){
-     if(parseInt(numb)-total > 0){
-       return closeState = true;
-     } 
-    },
+    // clear(){
+    //  if(parseInt(this.numb)- this.total > 0){
+    //    return closeState = true;
+    //  } 
+    // },
     async postData(){
-      let proUrl = "http://192.168.43.204/pos/api/order";
+      let proUrl = "http://localhost/pos/api/order";
       let userData = this.userData;
       let headerConfig = {
         headers: {

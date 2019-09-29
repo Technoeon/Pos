@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import store from './store'
+import {store} from './store'
 import Login from './components/Login'
 import HelloWorld from './components/HelloWorld'
 import Checkout from './components/Checkout'
@@ -10,8 +10,6 @@ Vue.use(Router)
 
 
 const router = new Router ({
-    mode: 'history',
-    base: process.env.BASE_URL,
     routes: [ 
     {
         path: '/', 
